@@ -1,0 +1,93 @@
+name: tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  tests:
+    name: Python ${{ matrix.python }}
+    runs-on: "ubuntu-latest"
+    strategy:
+      fail-fast: false
+      matrix:
+        python: [ "3.6", "3.7", "3.8", "3.9", "3.10" ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install libxml2
+        if: startsWith(matrix.python, 'pypy')
+        run: |
+          sudo apt-get install libxml2-dev libxslt-dev
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools tox codecov
+      - name: Test
+        run: |
+          tox -e py -- --cov=./xsdata_pydantic --cov-branch --doctest-glob="docs/*.rst"
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+  sample-tests:
+    name: Python ${{ matrix.python }} - ${{ matrix.collection.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: [ "3.9" ]
+        collection:
+          - { name: "Amadeus", id: "amadeus" }
+          - { name: "Sabre", id: "sabre" }
+          - { name: "Travelport", id: "travelport" }
+          - { name: "Common Types", id: "common_types" }
+          - { name: "ReqIF", id: "reqif" }
+          - { name: "NPO API", id: "npo" }
+          - { name: "DateX II", id: "datexii" }
+          - { name: "EWP", id: "ewp" }
+          - { name: "UBL", id: "ubl" }
+          - { name: "NeTEx", id: "netex" }
+          - { name: "DefXML", id: "defxml" }
+          - { name: "SpaceX", id: "spacex" }
+          - { name: "Autosar", id: "autosar" }
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+        with:
+          repository: tefra/xsdata-samples
+          ref: master
+          submodules: true
+          path: xsdata-samples
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip mypy
+          pip install .[cli,test]
+      - name: Generate Code
+        working-directory: ./xsdata-samples
+        if: matrix.collection.id != 'defxml'
+        run: OUTPUT_FORMAT=pydantic make build-${{ matrix.collection.id }}
+      - name: Run Tests
+        if: matrix.collection.id != 'common_types'
+        working-directory: ./xsdata-samples
+        run: OUTPUT_FORMAT=pydantic make test-${{ matrix.collection.id }}
+      - name: Run mypy
+        working-directory: ./xsdata-samples
+        run: OUTPUT_FORMAT=pydantic make mypy-${{ matrix.collection.id }}
+
+  pre-commit:
+    name: Pre-commit Hooks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: pre-commit/action@v2.0.2

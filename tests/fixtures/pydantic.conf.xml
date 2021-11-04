@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Config xmlns="http://pypi.org/project/xsdata" version="21.8">
+  <Output maxLineLength="79">
+    <Package>tests.fixtures.po.models</Package>
+    <Format repr="true" eq="true" order="false" unsafeHash="false" frozen="false" slots="true" kwOnly="true">pydantic</Format>
+    <Structure>single-package</Structure>
+    <DocstringStyle>reStructuredText</DocstringStyle>
+    <RelativeImports>false</RelativeImports>
+    <CompoundFields>false</CompoundFields>
+  </Output>
+  <Conventions>
+    <ClassName case="pascalCase" safePrefix="type"/>
+    <FieldName case="snakeCase" safePrefix="value"/>
+    <ConstantName case="screamingSnakeCase" safePrefix="value"/>
+    <ModuleName case="snakeCase" safePrefix="mod"/>
+    <PackageName case="snakeCase" safePrefix="pkg"/>
+  </Conventions>
+  <Aliases>
+    <ClassName source="fooType" target="Foo"/>
+    <ClassName source="ABCSomething" target="ABCSomething"/>
+    <FieldName source="ChangeofGauge" target="change_of_gauge"/>
+    <PackageName source="http://www.w3.org/1999/xhtml" target="xtml"/>
+    <ModuleName source="2010.1" target="2020a"/>
+  </Aliases>
+</Config>
