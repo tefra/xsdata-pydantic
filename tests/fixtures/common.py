@@ -21,6 +21,7 @@ class TypeB(TypeA):
     three: bool = field(default=True)
 
 
+# i don't like this config malarky
 @dataclass(config=Config)
 class TypeC(TypeB):
     four: List[datetime] = field(default_factory=list, metadata={"format": "%d %B %Y %H:%M"})
