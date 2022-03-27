@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Config xmlns="http://pypi.org/project/xsdata" version="21.8">
+<Config xmlns="http://pypi.org/project/xsdata" version="22.3">
   <Output maxLineLength="79">
     <Package>tests.fixtures.po.models</Package>
     <Format repr="true" eq="true" order="false" unsafeHash="false" frozen="false" slots="true" kwOnly="true">pydantic</Format>
     <Structure>single-package</Structure>
     <DocstringStyle>reStructuredText</DocstringStyle>
     <RelativeImports>false</RelativeImports>
-    <CompoundFields>false</CompoundFields>
+    <CompoundFields defaultName="choice" forceDefaultName="false">false</CompoundFields>
+    <PostponedAnnotations>false</PostponedAnnotations>
+    <UnnestClasses>false</UnnestClasses>
   </Output>
   <Conventions>
     <ClassName case="pascalCase" safePrefix="type"/>
@@ -15,11 +17,11 @@
     <ModuleName case="snakeCase" safePrefix="mod"/>
     <PackageName case="snakeCase" safePrefix="pkg"/>
   </Conventions>
-  <Aliases>
-    <ClassName source="fooType" target="Foo"/>
-    <ClassName source="ABCSomething" target="ABCSomething"/>
-    <FieldName source="ChangeofGauge" target="change_of_gauge"/>
-    <PackageName source="http://www.w3.org/1999/xhtml" target="xtml"/>
-    <ModuleName source="2010.1" target="2020a"/>
-  </Aliases>
+  <Substitutions>
+    <Substitution type="class" search="fooType" replace="Foo"/>
+    <Substitution type="class" search="ABCSomething" replace="ABCSomething"/>
+    <Substitution type="field" search="ChangeofGauge" replace="change_of_gauge"/>
+    <Substitution type="package" search="http://www.w3.org/1999/xhtml" replace="xtml"/>
+    <Substitution type="module" search="2010.1" replace="2020a"/>
+  </Substitutions>
 </Config>
