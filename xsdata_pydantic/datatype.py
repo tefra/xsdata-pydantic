@@ -1,3 +1,4 @@
+import xml.etree.ElementTree
 from typing import Union
 
 from xsdata.models import datatype
@@ -66,3 +67,16 @@ class XmlPeriod(datatype.XmlPeriod):
             return value
 
         return cls(value)
+
+
+class QName(xml.etree.ElementTree.QName):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, value: Union[str, "QName"]) -> "QName":
+        if isinstance(value, str):
+            return cls(value)
+
+        return value
