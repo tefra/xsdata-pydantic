@@ -13,17 +13,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: [ "3.6", "3.7", "3.8", "3.9", "3.10" ]
+        python: [ "3.7", "3.8", "3.9", "3.10" ]
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python }}
-      - name: Install libxml2
-        if: startsWith(matrix.python, 'pypy')
-        run: |
-          sudo apt-get install libxml2-dev libxslt-dev
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip setuptools tox codecov
@@ -36,26 +32,27 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
   sample-tests:
-    name: Python ${{ matrix.python }} - ${{ matrix.collection.name }}
+    name: Python ${{ matrix.python }} - ${{ matrix.collection }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         python: [ "3.9" ]
         collection:
-          - { name: "Amadeus", id: "amadeus" }
-          - { name: "Sabre", id: "sabre" }
-          - { name: "Travelport", id: "travelport" }
-          - { name: "Common Types", id: "common_types" }
-          - { name: "ReqIF", id: "reqif" }
-          - { name: "NPO API", id: "npo" }
-          - { name: "DateX II", id: "datexii" }
-          - { name: "EWP", id: "ewp" }
-          - { name: "UBL", id: "ubl" }
-          - { name: "NeTEx", id: "netex" }
-          - { name: "DefXML", id: "defxml" }
-          - { name: "SpaceX", id: "spacex" }
-          - { name: "Autosar", id: "autosar" }
+          - amadeus
+          - autosar
+          - bpmn
+          - common_types
+          - datexii
+          - ewp
+          - generali
+          - netex
+          - npo
+          - reqif
+          - sabre
+          - spacex
+          - travelport
+          - ubl
     steps:
       - uses: actions/checkout@v2
       - uses: actions/checkout@v2
@@ -72,17 +69,18 @@ jobs:
         run: |
           pip install --upgrade pip mypy
           pip install .[cli,test]
+          pip install -I git+https://github.com/tefra/xsdata@master#egg=xsdata[cli,lxml]
       - name: Generate Code
         working-directory: ./xsdata-samples
-        if: matrix.collection.id != 'defxml'
-        run: OUTPUT_FORMAT=pydantic make build-${{ matrix.collection.id }}
+        if: matrix.collection != 'defxml'
+        run: OUTPUT_FORMAT=pydantic CLI_FLAGS="--unnest-classes" make build-${{ matrix.collection }}
       - name: Run Tests
-        if: matrix.collection.id != 'common_types'
+        if: matrix.collection != 'common_types'
         working-directory: ./xsdata-samples
-        run: OUTPUT_FORMAT=pydantic make test-${{ matrix.collection.id }}
+        run: OUTPUT_FORMAT=pydantic make test-${{ matrix.collection }}
       - name: Run mypy
         working-directory: ./xsdata-samples
-        run: OUTPUT_FORMAT=pydantic make mypy-${{ matrix.collection.id }}
+        run: OUTPUT_FORMAT=pydantic make mypy-${{ matrix.collection }}
 
   pre-commit:
     name: Pre-commit Hooks

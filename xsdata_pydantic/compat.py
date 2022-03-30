@@ -1,4 +1,5 @@
 from dataclasses import field
+from typing import Any
 from typing import Dict
 from typing import Generic
 from typing import List
@@ -65,3 +66,10 @@ class Pydantic(Dataclasses):
     @property
     def derived_element(self) -> Type:
         return DerivedElement
+
+    def is_model(self, obj: Any) -> bool:
+        result = super().is_model(obj)
+        if result and hasattr(obj, "__processed__"):
+            obj.__pydantic_model__.update_forward_refs()
+
+        return result
