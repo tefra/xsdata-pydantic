@@ -72,4 +72,4 @@ class Pydantic(Dataclasses):
         if result and hasattr(obj, "__processed__"):
             obj.__pydantic_model__.update_forward_refs()
 
-        return result
+        return result and hasattr(obj, "__processed__")
