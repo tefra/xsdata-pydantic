@@ -1,4 +1,5 @@
 from dataclasses import field
+from dataclasses import is_dataclass
 from typing import Any
 from typing import Dict
 from typing import Generic
@@ -68,8 +69,9 @@ class Pydantic(Dataclasses):
         return DerivedElement
 
     def is_model(self, obj: Any) -> bool:
-        result = super().is_model(obj)
-        if result and hasattr(obj, "__processed__"):
-            obj.__pydantic_model__.update_forward_refs()
+        clazz = obj if isinstance(obj, type) else type(obj)
+        if is_dataclass(clazz) and hasattr(clazz, "__processed__"):
+            clazz.__pydantic_model__.update_forward_refs()  # type: ignore
+            return True
 
-        return result and hasattr(obj, "__processed__")
+        return False
