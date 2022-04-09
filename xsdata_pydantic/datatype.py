@@ -1,82 +1,46 @@
 import xml.etree.ElementTree
-from typing import Union
+from typing import Any
+from typing import Callable
+from typing import Generator
 
 from xsdata.models import datatype
 
 
-class XmlDate(datatype.XmlDate):
+class ValidatorMixin:
     @classmethod
-    def __get_validators__(cls):
+    def __get_validators__(cls) -> Generator[Callable, None, None]:
         yield cls.validate
 
     @classmethod
-    def validate(cls, value: Union[str, "XmlDate"]) -> "XmlDate":
+    def validate(cls, value: Any) -> Any:
         if isinstance(value, cls):
             return value
 
-        return cls.from_string(value)
-
-
-class XmlDateTime(datatype.XmlDateTime):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, value: Union[str, "XmlDateTime"]) -> "XmlDateTime":
-        if isinstance(value, cls):
-            return value
-
-        return cls.from_string(value)
-
-
-class XmlTime(datatype.XmlTime):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, value: Union[str, "XmlTime"]) -> "XmlTime":
-        if isinstance(value, cls):
-            return value
-
-        return cls.from_string(value)
-
-
-class XmlDuration(datatype.XmlDuration):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, value: Union[str, "XmlDuration"]) -> "XmlDuration":
-        if isinstance(value, cls):
-            return value
-
-        return cls(value)
-
-
-class XmlPeriod(datatype.XmlPeriod):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, value: Union[str, "XmlPeriod"]) -> "XmlPeriod":
-        if isinstance(value, cls):
-            return value
-
-        return cls(value)
-
-
-class QName(xml.etree.ElementTree.QName):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, value: Union[str, "QName"]) -> "QName":
         if isinstance(value, str):
-            return cls(value)
+            return getattr(cls, "from_string", cls)(value)  # type: ignore
 
-        return value
+        raise ValueError()
+
+
+class XmlDate(datatype.XmlDate, ValidatorMixin):
+    pass
+
+
+class XmlDateTime(datatype.XmlDateTime, ValidatorMixin):
+    pass
+
+
+class XmlTime(datatype.XmlTime, ValidatorMixin):
+    pass
+
+
+class XmlDuration(datatype.XmlDuration, ValidatorMixin):
+    pass
+
+
+class XmlPeriod(datatype.XmlPeriod, ValidatorMixin):
+    pass
+
+
+class QName(xml.etree.ElementTree.QName, ValidatorMixin):
+    pass
