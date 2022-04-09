@@ -39,3 +39,10 @@ class PydanticFilters(Filters):
         )
 
         return {key: patterns[key] for key in sorted(patterns)}
+
+    @classmethod
+    def filter_metadata(cls, data: Dict) -> Dict:
+        data = super().filter_metadata(data)
+        data.pop("min_length", None)
+        data.pop("max_length", None)
+        return data
