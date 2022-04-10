@@ -103,6 +103,6 @@ XML Parsing
     'https://www.cnn.com/videos/world/2022/04/08/ukraine-chernihiv-visit-ward-pkg-tsr-vpx.cnn'
 
 
-Changelog: 22.4 (2022-04-11)
+Changelog: xx.x (xxxx-xx-xx)
 ----------------------------
 - Initial Release
