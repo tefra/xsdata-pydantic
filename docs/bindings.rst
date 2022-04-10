@@ -7,6 +7,10 @@ the data models to the :class:`~xsdata.formats.dataclass.context.XmlContext` tha
 among other stuff also acts as a compatibility layer between :mod:`python:dataclasses`
 and pydantic dataclasses
 
+.. warning::
+
+    The plugin is using xsdata's data bindings to parse json/xml, only xsdata's
+    :ref:`types <xsdata:Data Types>` are supported!
 
 
 Specify ClassType

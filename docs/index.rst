@@ -4,8 +4,30 @@
 Why Pydantic?
 =============
 
-Pydantic is the defacto dto of the fastapi framework, offers out of the box runtime
-validations and has a very nice compatibility layer with the stdlib dataclasses
+Because you asked for! Pydantic offers out of the box validations and offers a
+dataclasses compatibility layer that we utilize to bring code generation and
+xml data binding with xsdata!
+
+
+Limitations
+===========
+
+
+Pydantic dataclasses don't behave with nested classes and self referencing types.
+
+Check `issue <https://github.com/samuelcolvin/pydantic/issues/3695>`_ on github.
+Until this issue is fixed, you can use the xsdata generator `--unnest-classes`
+flag, that will move nested classes to the root level.
+
+
+.. code:: console
+
+    xsdata SOURCE --unnest-classes --output pydantic
+
+
+The plugin is using xsdata's data bindings to parse json/xml, only xsdata's
+:ref:`types <xsdata:Data Types>` are supported!
+
 
 .. toctree::
     :maxdepth: 1
