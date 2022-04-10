@@ -20,21 +20,10 @@ class PydanticFilters(Filters):
     @classmethod
     def build_import_patterns(cls) -> Dict[str, Dict]:
         patterns = super().build_import_patterns()
-        type_patterns = cls.build_type_patterns
         patterns.update(
             {
-                "xsdata.models.datatype": {},
-                "xml.etree.ElementTree": {},
                 "dataclasses": {"field": [" = field("]},
                 "pydantic.dataclasses": {"dataclass": ["@dataclass"]},
-                "xsdata_pydantic.datatype": {
-                    "XmlDate": type_patterns("XmlDate"),
-                    "XmlDateTime": type_patterns("XmlDateTime"),
-                    "XmlDuration": type_patterns("XmlDuration"),
-                    "XmlPeriod": type_patterns("XmlPeriod"),
-                    "XmlTime": type_patterns("XmlTime"),
-                    "QName": type_patterns("QName"),
-                },
             }
         )
 
