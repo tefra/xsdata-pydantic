@@ -57,20 +57,21 @@ Generate Models
 
 .. code-block:: python
 
-    ...
+    from dataclasses import field
+    from pydantic.dataclasses import dataclass
 
     @dataclass
     class Rss:
         class Meta:
             name = "rss"
 
-        version: Optional[float] = attr.ib(
+        version: Optional[float] = field(
             default=None,
             metadata={
                 "type": "Attribute",
             }
         )
-        channel: Optional[Channel] = attr.ib(
+        channel: Optional[Channel] = field(
             default=None,
             metadata={
                 "type": "Element",
@@ -94,11 +95,12 @@ XML Parsing
     ...     result = parser.parse(rq, Rss)
     ...
     >>> result.channel.item[2].title
-    'Vatican indicts 10 people, including a Cardinal, over an international financial scandal'
+    "'A total lack of discipline': Clarissa Ward visits abandoned Russian foxholes"
+
     >>> result.channel.item[2].pub_date
-    'Sat, 03 Jul 2021 16:37:14 GMT'
+    'Fri, 08 Apr 2022 22:56:33 GMT'
     >>> result.channel.item[2].link
-    'https://www.cnn.com/2021/07/03/europe/vatican-financial-scandal-intl/index.html'
+    'https://www.cnn.com/videos/world/2022/04/08/ukraine-chernihiv-visit-ward-pkg-tsr-vpx.cnn'
 
 
 Changelog: 21.11 (2021-11-XX)
