@@ -1,16 +1,26 @@
 from dataclasses import field
 from dataclasses import is_dataclass
 from typing import Any
+from typing import Callable
 from typing import Dict
 from typing import Generic
 from typing import List
 from typing import Optional
 from typing import Type
 from typing import TypeVar
+from xml.etree.ElementTree import QName
 
 from pydantic.dataclasses import dataclass
+from pydantic.validators import _VALIDATORS
+from xsdata.formats.dataclass.compat import class_types
 from xsdata.formats.dataclass.compat import Dataclasses
 from xsdata.formats.dataclass.models.elements import XmlType
+from xsdata.models.datatype import XmlDate
+from xsdata.models.datatype import XmlDateTime
+from xsdata.models.datatype import XmlDuration
+from xsdata.models.datatype import XmlPeriod
+from xsdata.models.datatype import XmlTime
+
 
 T = TypeVar("T", bound=object)
 
@@ -75,3 +85,32 @@ class Pydantic(Dataclasses):
             return True
 
         return False
+
+
+class_types.register("pydantic", Pydantic())
+
+
+def make_validators(tp: Type, factory: Callable) -> List[Callable]:
+    def validator(value: Any) -> Any:
+
+        if isinstance(value, tp):
+            return value
+
+        if isinstance(value, str):
+            return factory(value)
+
+        raise ValueError
+
+    return [validator]
+
+
+_VALIDATORS.extend(
+    [
+        (XmlDate, make_validators(XmlDate, XmlDate.from_string)),
+        (XmlDateTime, make_validators(XmlDateTime, XmlDateTime.from_string)),
+        (XmlTime, make_validators(XmlTime, XmlTime.from_string)),
+        (XmlDuration, make_validators(XmlDuration, XmlDuration)),
+        (XmlPeriod, make_validators(XmlPeriod, XmlPeriod)),
+        (QName, make_validators(QName, QName)),
+    ]
+)

@@ -2,7 +2,7 @@ from dataclasses import field
 from decimal import Decimal
 from pydantic.dataclasses import dataclass
 from typing import List, Optional
-from xsdata_pydantic.datatype import XmlDate
+from xsdata.models.datatype import XmlDate
 
 __NAMESPACE__ = "foo"
 
