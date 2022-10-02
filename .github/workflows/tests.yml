@@ -43,12 +43,12 @@ jobs:
           - { name: "Autosar", id: "autosar" }
           - { name: "BPMN", id: "bpmn" }
           - { name: "Common Types", id: "common_types" }
-          - { name: "Crossref Metadata", id: "crossref" }
+#          - { name: "Crossref Metadata", id: "crossref" }
           - { name: "DateX II", id: "datexii" }
-          - { name: "DefXML", id: "defxml" }
+#          - { name: "DefXML", id: "defxml" }
           - { name: "EWP", id: "ewp" }
           - { name: "Generali", id: "generali" }
-          - { name: "NeTEx", id: "netex" }
+#          - { name: "NeTEx", id: "netex" }
           - { name: "NPO API", id: "npo" }
           - { name: "ReqIF", id: "reqif" }
           - { name: "Sabre", id: "sabre" }
