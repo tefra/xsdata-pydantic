@@ -32,27 +32,30 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
   sample-tests:
-    name: Python ${{ matrix.python }} - ${{ matrix.collection }}
+    name: Python ${{ matrix.python }} - ${{ matrix.collection.name }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        python: [ "3.9" ]
+        python: [ "3.10" ]
         collection:
-          - amadeus
-#          - autosar
-          - bpmn
-          - common_types
-          - datexii
-          - ewp
-          - generali
-#          - netex
-          - npo
-          - reqif
-          - sabre
-          - spacex
-          - travelport
-          - ubl
+          - { name: "Amadeus", id: "amadeus" }
+          - { name: "Autosar", id: "autosar" }
+          - { name: "BPMN", id: "bpmn" }
+          - { name: "Common Types", id: "common_types" }
+          - { name: "Crossref Metadata", id: "crossref" }
+          - { name: "DateX II", id: "datexii" }
+          - { name: "DefXML", id: "defxml" }
+          - { name: "EWP", id: "ewp" }
+          - { name: "Generali", id: "generali" }
+          - { name: "NeTEx", id: "netex" }
+          - { name: "NPO API", id: "npo" }
+          - { name: "ReqIF", id: "reqif" }
+          - { name: "Sabre", id: "sabre" }
+          - { name: "SpaceX", id: "spacex" }
+          - { name: "Travelport", id: "travelport" }
+          - { name: "UBL", id: "ubl" }
+          - { name: "XCBL", id: "xcbl" }
     steps:
       - uses: actions/checkout@v2
       - uses: actions/checkout@v2
@@ -72,14 +75,14 @@ jobs:
       - name: Generate Code
         working-directory: ./xsdata-samples
         if: matrix.collection != 'defxml'
-        run: OUTPUT_FORMAT=pydantic CLI_FLAGS="--unnest-classes" make build-${{ matrix.collection }}
+        run: OUTPUT_FORMAT=pydantic CLI_FLAGS="--unnest-classes" make build-${{ matrix.collection.id }}
       - name: Run Tests
         if: matrix.collection != 'common_types'
         working-directory: ./xsdata-samples
-        run: OUTPUT_FORMAT=pydantic make test-${{ matrix.collection }}
+        run: OUTPUT_FORMAT=pydantic make test-${{ matrix.collection.id }}
       - name: Run mypy
         working-directory: ./xsdata-samples
-        run: OUTPUT_FORMAT=pydantic make mypy-${{ matrix.collection }}
+        run: OUTPUT_FORMAT=pydantic make mypy-${{ matrix.collection.id }}
 
   pre-commit:
     name: Pre-commit Hooks
