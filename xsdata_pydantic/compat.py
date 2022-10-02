@@ -80,7 +80,7 @@ class Pydantic(Dataclasses):
 
     def is_model(self, obj: Any) -> bool:
         clazz = obj if isinstance(obj, type) else type(obj)
-        if is_dataclass(clazz) and hasattr(clazz, "__processed__"):
+        if is_dataclass(clazz) and hasattr(clazz, "__pydantic_model__"):
             clazz.__pydantic_model__.update_forward_refs()  # type: ignore
             return True
 
