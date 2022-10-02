@@ -24,6 +24,9 @@ flag, that will move nested classes to the root level.
 
     xsdata SOURCE --unnest-classes --output pydantic
 
+There is still some issues with forward references but most of the xsdata-samples
+tests are passing.
+
 
 The plugin is using xsdata's data bindings to parse json/xml, only xsdata's
 :ref:`types <xsdata:Data Types>` are supported!
