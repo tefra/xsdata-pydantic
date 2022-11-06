@@ -13,11 +13,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: [ "3.7", "3.8", "3.9", "3.10" ]
+        python: [ "3.7", "3.8", "3.9", "3.10", "3.11" ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python }}
       - name: Install dependencies
@@ -27,7 +27,7 @@ jobs:
         run: |
           tox -e py -- --cov=./xsdata_pydantic --cov-branch --doctest-glob="docs/*.rst"
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
@@ -57,15 +57,15 @@ jobs:
           - { name: "UBL", id: "ubl" }
           - { name: "XCBL", id: "xcbl" }
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
           repository: tefra/xsdata-samples
           ref: master
           submodules: true
           path: xsdata-samples
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python }}
       - name: Install dependencies
@@ -88,6 +88,6 @@ jobs:
     name: Pre-commit Hooks
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-      - uses: pre-commit/action@v2.0.2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - uses: pre-commit/action@v3.0.0
