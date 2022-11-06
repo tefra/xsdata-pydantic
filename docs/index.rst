@@ -39,6 +39,7 @@ The plugin is using xsdata's data bindings to parse json/xml, only xsdata's
     installation
     codegen
     bindings
+    issues
     changelog
     GitHub Repository <https://github.com/tefra/xsdata-pydantic>
 
