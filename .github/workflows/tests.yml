@@ -75,14 +75,14 @@ jobs:
       - name: Generate Code
         working-directory: ./xsdata-samples
         if: matrix.collection != 'defxml'
-        run: OUTPUT_FORMAT=pydantic CLI_FLAGS="--unnest-classes" make build-${{ matrix.collection.id }}
+        run: ./run.py build ${{ matrix.collection.id }} --output-format=pydantic --unnest-classes
       - name: Run Tests
         if: matrix.collection != 'common_types'
         working-directory: ./xsdata-samples
-        run: OUTPUT_FORMAT=pydantic make test-${{ matrix.collection.id }}
+        run: ./run.py test ${{ matrix.collection.id }} --output-format=pydantic
       - name: Run mypy
         working-directory: ./xsdata-samples
-        run: OUTPUT_FORMAT=pydantic make mypy-${{ matrix.collection.id }}
+        run: ./run.py mypy ${{ matrix.collection.id }} --output-format=pydantic
 
   pre-commit:
     name: Pre-commit Hooks

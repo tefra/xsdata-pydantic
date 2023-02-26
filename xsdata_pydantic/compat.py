@@ -92,7 +92,6 @@ class_types.register("pydantic", Pydantic())
 
 def make_validators(tp: Type, factory: Callable) -> List[Callable]:
     def validator(value: Any) -> Any:
-
         if isinstance(value, tp):
             return value
 
