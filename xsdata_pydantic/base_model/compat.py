@@ -53,4 +53,4 @@ class PydanticBaseModel(Pydantic):
         return [pydantic_field_to_dataclass_field(field) for field in _fields]
 
 
-class_types.register("pydantic_base_model", PydanticBaseModel())
+class_types.register("pydantic-base-model", PydanticBaseModel())

@@ -4,4 +4,4 @@ from xsdata_pydantic.base_model.generator import PydanticBaseGenerator
 from xsdata_pydantic.generator import PydanticGenerator
 
 CodeWriter.register_generator("pydantic", PydanticGenerator)
-CodeWriter.register_generator("pydantic_base_model", PydanticBaseGenerator)
+CodeWriter.register_generator("pydantic-base-model", PydanticBaseGenerator)

@@ -17,7 +17,7 @@ class XmlContext(context.XmlContext):
         attribute_name_generator: Callable = return_input,
     ):
         super().__init__(
-            element_name_generator, attribute_name_generator, "pydantic_base_model"
+            element_name_generator, attribute_name_generator, "pydantic-base-model"
         )
 
 
