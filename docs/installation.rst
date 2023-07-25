@@ -21,7 +21,7 @@ In order to use the latest updates you can also install directly from the git re
 
 .. code-block:: console
 
-    $ pip install git+https://github.com/tefra/xsdata-pydantic@master#egg=xsdata-pydantic[cli]
+    $ pip install xsdata-pydantic[cli,lxml] @ git+https://github.com/tefra/xsdata-pydantic
 
 
 Install using conda

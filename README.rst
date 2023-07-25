@@ -1,4 +1,4 @@
-.. image:: https://raw.githubusercontent.com/tefra/xsdata-pydantic/master/docs/_static/logo.svg
+.. image:: https://raw.githubusercontent.com/tefra/xsdata-pydantic/main/docs/_static/logo.svg
     :target: https://xsdata-pydantic.readthedocs.io/
 
 xsdata powered by pydantic!
@@ -10,7 +10,7 @@ xsdata powered by pydantic!
 .. image:: https://readthedocs.org/projects/xsdata-pydantic/badge
     :target: https://xsdata-pydantic.readthedocs.io/
 
-.. image:: https://codecov.io/gh/tefra/xsdata-pydantic/branch/master/graph/badge.svg
+.. image:: https://codecov.io/gh/tefra/xsdata-pydantic/branch/main/graph/badge.svg
     :target: https://codecov.io/gh/tefra/xsdata-pydantic
 
 .. image:: https://img.shields.io/github/languages/top/tefra/xsdata-pydantic.svg
