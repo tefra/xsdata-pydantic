@@ -27,7 +27,7 @@ classifiers = [
 keywords = ["xsd", "wsdl", "schema", "dtd", "binding", "xml", "json", "dataclasses", "generator", "cli", "pydantic"]
 requires-python = ">=3.7"
 dependencies = [
-    "pydantic<2.0",
+    "pydantic<3.0",
     "xsdata>=23.5",
 ]
 dynamic = ["version"]
