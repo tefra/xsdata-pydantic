@@ -1,0 +1,79 @@
+[build-system]
+requires = ["setuptools>=61.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xsdata_pydantic"
+description = "xsdata pydantic plugin"
+authors = [{name = "Christodoulos Tsoulloftas", email = "chris@komposta.net"}]
+license = {text = "MIT"}
+classifiers = [
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Topic :: Software Development :: Code Generators",
+    "Topic :: Text Processing :: Markup :: XML",
+]
+keywords = ["xsd", "wsdl", "schema", "dtd", "binding", "xml", "json", "dataclasses", "generator", "cli", "pydantic"]
+requires-python = ">=3.7"
+dependencies = [
+    "pydantic<2.0",
+    "xsdata>=23.5",
+]
+dynamic = ["version"]
+
+[project.readme]
+file = "README.rst"
+content-type = "text/x-rst"
+
+[project.urls]
+Homepage = "https://github.com/tefra/xsdata-pydantic"
+Source = "https://github.com/tefra/xsdata-pydantic"
+Documentation = "https://xsdata-pydantic.readthedocs.io/"
+Changelog = "https://xsdata-pydantic.readthedocs.io/en/latest/changelog.html"
+
+[project.entry-points]
+"xsdata.plugins.cli" = {xsdata_attrs = "xsdata_pydantic.hooks.cli"}
+
+[project.entry-points."xsdata.plugins.class_types"]
+xsdata_pydantic = "xsdata_pydantic.hooks.class_type"
+
+[project.optional-dependencies]
+cli = ["xsdata[cli]>=23.5"]
+docs = [
+    "furo",
+    "sphinx",
+    "sphinx-autobuild",
+]
+lxml = ["lxml>=4.4.1"]
+soap = ["requests"]
+test = [
+    "codecov",
+    "lxml",
+    "pre-commit",
+    "pytest",
+    "pytest-cov",
+]
+
+[tool.setuptools]
+include-package-data = true
+license-files = ["LICENSE"]
+
+[tool.setuptools.dynamic]
+version = {attr = "xsdata_pydantic.__version__"}
+
+[tool.doc8]
+max-line-length = 88
+
+[tool.pytest.ini_options]
+addopts = "--color=yes"

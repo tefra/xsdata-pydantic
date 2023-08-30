@@ -2,24 +2,24 @@ exclude: tests/fixtures
 
 repos:
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.3.1
+    rev: v3.10.1
     hooks:
       - id: pyupgrade
-        args: [ --py37-plus ]
+        args: [ --py38-plus ]
   - repo: https://github.com/asottile/reorder_python_imports
-    rev: v3.9.0
+    rev: v3.10.0
     hooks:
       - id: reorder-python-imports
   - repo: https://github.com/ambv/black
-    rev: 23.1.0
+    rev: 23.7.0
     hooks:
       - id: black
   - repo: https://github.com/PyCQA/autoflake
-    rev: v2.0.1
+    rev: v2.2.0
     hooks:
       - id: autoflake
-  - repo: https://github.com/pycqa/flake8
-    rev: 6.0.0
+  - repo: https://github.com/PyCQA/flake8
+    rev: 6.1.0
     hooks:
       - id: flake8
         additional_dependencies: [
@@ -35,21 +35,20 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: debug-statements
-  - repo: https://github.com/myint/docformatter
-    rev: v1.5.1
+  - repo: https://github.com/PyCQA/docformatter
+    rev: v1.7.5
     hooks:
       - id: docformatter
         args: [ "--in-place", "--pre-summary-newline" ]
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.0.1
+    rev: v1.5.0
     hooks:
       - id: mypy
-        additional_dependencies: [ tokenize-rt, types-requests, types-Jinja2, types-click, types-docutils ]
-  - repo: https://github.com/asottile/setup-cfg-fmt
-    rev: v2.2.0
-    hooks:
-      - id: setup-cfg-fmt
-        args: [ "--min-py3-version=3.7", "--max-py-version=3.11", "--include-version-classifiers" ]
+        files: ^(xsdata_pydantic/)
+        additional_dependencies:
+          - tokenize-rt
+          - types-attrs
+        args: [ "--check-untyped-defs", "--ignore-missing-imports"]
   - repo: https://github.com/PyCQA/doc8
     rev: v1.1.1
     hooks:
