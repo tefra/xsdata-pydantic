@@ -29,60 +29,60 @@ class PydanticGeneratorTests(FactoryTestCase):
         actual = [(out.path, out.title, out.source) for out in iterator]
 
         expected = (
-            "from dataclasses import field\n"
-            "from pydantic.dataclasses import dataclass\n"
             "from typing import List, Optional\n"
+            "\n"
+            "from pydantic import BaseModel, ConfigDict, Field\n"
             "\n"
             '__NAMESPACE__ = "xsdata"\n'
             "\n"
             "\n"
-            "@dataclass\n"
-            "class ClassB:\n"
+            "class ClassB(BaseModel):\n"
             "    class Meta:\n"
             '        name = "class_B"\n'
             "\n"
-            "    attr_b: List[str] = field(\n"
+            "    model_config = ConfigDict(defer_build=True)\n"
+            "    attr_b: List[str] = Field(\n"
             "        default_factory=list,\n"
-            "        metadata={\n"
+            "        json_schema_extra={\n"
             '            "name": "attr_B",\n'
             '            "type": "Element",\n'
             '            "max_occurs": 3,\n'
-            "        }\n"
+            "        },\n"
             "    )\n"
-            "    attr_c: Optional[str] = field(\n"
+            "    attr_c: Optional[str] = Field(\n"
             "        default=None,\n"
-            "        metadata={\n"
+            "        json_schema_extra={\n"
             '            "name": "attr_C",\n'
             '            "type": "Element",\n'
-            "        }\n"
+            "        },\n"
             "    )\n"
             "\n"
             "\n"
-            "@dataclass\n"
-            "class ClassC:\n"
+            "class ClassC(BaseModel):\n"
             "    class Meta:\n"
             '        name = "class_C"\n'
             "\n"
-            "    attr_d: Optional[str] = field(\n"
+            "    model_config = ConfigDict(defer_build=True)\n"
+            "    attr_d: Optional[str] = Field(\n"
             "        default=None,\n"
-            "        metadata={\n"
+            "        json_schema_extra={\n"
             '            "name": "attr_D",\n'
             '            "type": "Element",\n'
-            "        }\n"
+            "        },\n"
             "    )\n"
-            "    attr_e: Optional[str] = field(\n"
+            "    attr_e: Optional[str] = Field(\n"
             "        default=None,\n"
-            "        metadata={\n"
+            "        json_schema_extra={\n"
             '            "name": "attr_E",\n'
             '            "type": "Element",\n'
-            "        }\n"
+            "        },\n"
             "    )\n"
-            "    attr_f: Optional[str] = field(\n"
+            "    attr_f: Optional[str] = Field(\n"
             "        default=None,\n"
-            "        metadata={\n"
+            "        json_schema_extra={\n"
             '            "name": "attr_F",\n'
             '            "type": "Element",\n'
-            "        }\n"
+            "        },\n"
             "    )\n"
         )
 

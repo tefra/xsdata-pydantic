@@ -1,9 +1,9 @@
 from tests.fixtures.po.models import (
+    Comment,
     Items,
+    PurchaseOrder,
     PurchaseOrderType,
     Usaddress,
-    Comment,
-    PurchaseOrder,
 )
 
 __all__ = [

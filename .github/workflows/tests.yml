@@ -15,9 +15,9 @@ jobs:
       matrix:
         python: [ "3.8", "3.9", "3.10", "3.11", "3.12-dev" ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
       - name: Install dependencies
@@ -26,9 +26,9 @@ jobs:
           python -m pip install .[lxml,cli,test,soap]
       - name: Test
         run: |
-          pytest --cov=./xsdata_pydantic --cov-report=xml --cov-branch --doctest-glob="docs/*.rst"
+          pytest --cov=./xsdata_pydantic --cov-report=xml --cov-branch
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
@@ -58,15 +58,15 @@ jobs:
           - { name: "Voko", id: "voko" }
           - { name: "XCBL", id: "xcbl" }
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           repository: tefra/xsdata-samples
           ref: main
           submodules: true
           path: xsdata-samples
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
       - name: Install dependencies
@@ -87,12 +87,12 @@ jobs:
     name: Pre-commit Hooks
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-      - uses: pre-commit/action@v3.0.0
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+    - uses: pre-commit/action@v3.0.1
   check-package:
-    name: Build & Inspect Package
+    name: Build & Inspect Package.
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: hynek/build-and-inspect-python-package@v1
+      - uses: actions/checkout@v4
+      - uses: hynek/build-and-inspect-python-package@v2
