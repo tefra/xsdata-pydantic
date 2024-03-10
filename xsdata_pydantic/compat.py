@@ -1,5 +1,5 @@
 from dataclasses import MISSING
-from typing import Any
+from typing import Any, NamedTuple
 from typing import Callable
 from typing import Dict
 from typing import Generic
@@ -17,7 +17,6 @@ from pydantic_core import PydanticUndefined
 from xsdata.formats.converter import converter
 from xsdata.formats.dataclass.compat import class_types
 from xsdata.formats.dataclass.compat import Dataclasses
-from xsdata.formats.dataclass.compat import FieldInfo
 from xsdata.formats.dataclass.models.elements import XmlType
 from xsdata.models.datatype import XmlDate
 from xsdata.models.datatype import XmlDateTime
@@ -27,6 +26,14 @@ from xsdata.models.datatype import XmlTime
 
 T = TypeVar("T", bound=object)
 EMPTY_DICT: Dict = {}
+
+
+class FieldInfo(NamedTuple):
+    name: str
+    init: bool
+    metadata: Dict[Any, Any]
+    default: Any
+    default_factory: Any
 
 
 class Config:

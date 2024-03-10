@@ -1,71 +1,10 @@
 from decimal import Decimal
-from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional
+
+from pydantic import BaseModel, ConfigDict, Field
 from xsdata.models.datatype import XmlDate
 
 __NAMESPACE__ = "foo"
-
-
-class Items(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    item: List["Items.Item"] = Field(
-        default_factory=list,
-        json_schema_extra={
-            "type": "Element",
-            "namespace": "foo",
-        }
-    )
-
-
-    class Item(BaseModel):
-        model_config = ConfigDict(defer_build=True)
-        product_name: str = Field(
-            json_schema_extra={
-                "name": "productName",
-                "type": "Element",
-                "namespace": "foo",
-                "required": True,
-            }
-        )
-        quantity: int = Field(
-            json_schema_extra={
-                "type": "Element",
-                "namespace": "foo",
-                "required": True,
-                "max_exclusive": 100,
-            }
-        )
-        usprice: Decimal = Field(
-            json_schema_extra={
-                "name": "USPrice",
-                "type": "Element",
-                "namespace": "foo",
-                "required": True,
-            }
-        )
-        comment: Optional[str] = Field(
-            default=None,
-            json_schema_extra={
-                "type": "Element",
-                "namespace": "foo",
-            }
-        )
-        ship_date: Optional[XmlDate] = Field(
-            default=None,
-            json_schema_extra={
-                "name": "shipDate",
-                "type": "Element",
-                "namespace": "foo",
-            }
-        )
-        part_num: str = Field(
-            json_schema_extra={
-                "name": "partNum",
-                "type": "Attribute",
-                "required": True,
-                "pattern": r"\d{3}-[A-Z]{2}",
-            }
-        )
 
 
 class Usaddress(BaseModel):
@@ -113,7 +52,7 @@ class Usaddress(BaseModel):
         default="US",
         json_schema_extra={
             "type": "Attribute",
-        }
+        },
     )
 
 
@@ -127,8 +66,69 @@ class Comment(BaseModel):
         default="",
         json_schema_extra={
             "required": True,
-        }
+        },
     )
+
+
+class Items(BaseModel):
+    model_config = ConfigDict(defer_build=True)
+    item: List["Items.Item"] = Field(
+        default_factory=list,
+        json_schema_extra={
+            "type": "Element",
+            "namespace": "foo",
+        },
+    )
+
+    class Item(BaseModel):
+        model_config = ConfigDict(defer_build=True)
+        product_name: str = Field(
+            json_schema_extra={
+                "name": "productName",
+                "type": "Element",
+                "namespace": "foo",
+                "required": True,
+            }
+        )
+        quantity: int = Field(
+            json_schema_extra={
+                "type": "Element",
+                "namespace": "foo",
+                "required": True,
+                "max_exclusive": 100,
+            }
+        )
+        usprice: Decimal = Field(
+            json_schema_extra={
+                "name": "USPrice",
+                "type": "Element",
+                "namespace": "foo",
+                "required": True,
+            }
+        )
+        comment: Optional[Comment] = Field(
+            default=None,
+            json_schema_extra={
+                "type": "Element",
+                "namespace": "foo",
+            },
+        )
+        ship_date: Optional[XmlDate] = Field(
+            default=None,
+            json_schema_extra={
+                "name": "shipDate",
+                "type": "Element",
+                "namespace": "foo",
+            },
+        )
+        part_num: str = Field(
+            json_schema_extra={
+                "name": "partNum",
+                "type": "Attribute",
+                "required": True,
+                "pattern": r"\d{3}-[A-Z]{2}",
+            }
+        )
 
 
 class PurchaseOrderType(BaseModel):
@@ -149,12 +149,12 @@ class PurchaseOrderType(BaseModel):
             "required": True,
         }
     )
-    comment: Optional[str] = Field(
+    comment: Optional[Comment] = Field(
         default=None,
         json_schema_extra={
             "type": "Element",
             "namespace": "foo",
-        }
+        },
     )
     items: Items = Field(
         json_schema_extra={
@@ -168,7 +168,7 @@ class PurchaseOrderType(BaseModel):
         json_schema_extra={
             "name": "orderDate",
             "type": "Attribute",
-        }
+        },
     )
 
 

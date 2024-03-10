@@ -29,8 +29,9 @@ class PydanticGeneratorTests(FactoryTestCase):
         actual = [(out.path, out.title, out.source) for out in iterator]
 
         expected = (
-            "from pydantic import BaseModel, Field, ConfigDict\n"
             "from typing import List, Optional\n"
+            "\n"
+            "from pydantic import BaseModel, ConfigDict, Field\n"
             "\n"
             '__NAMESPACE__ = "xsdata"\n'
             "\n"
@@ -46,14 +47,14 @@ class PydanticGeneratorTests(FactoryTestCase):
             '            "name": "attr_B",\n'
             '            "type": "Element",\n'
             '            "max_occurs": 3,\n'
-            "        }\n"
+            "        },\n"
             "    )\n"
             "    attr_c: Optional[str] = Field(\n"
             "        default=None,\n"
             "        json_schema_extra={\n"
             '            "name": "attr_C",\n'
             '            "type": "Element",\n'
-            "        }\n"
+            "        },\n"
             "    )\n"
             "\n"
             "\n"
@@ -67,21 +68,21 @@ class PydanticGeneratorTests(FactoryTestCase):
             "        json_schema_extra={\n"
             '            "name": "attr_D",\n'
             '            "type": "Element",\n'
-            "        }\n"
+            "        },\n"
             "    )\n"
             "    attr_e: Optional[str] = Field(\n"
             "        default=None,\n"
             "        json_schema_extra={\n"
             '            "name": "attr_E",\n'
             '            "type": "Element",\n'
-            "        }\n"
+            "        },\n"
             "    )\n"
             "    attr_f: Optional[str] = Field(\n"
             "        default=None,\n"
             "        json_schema_extra={\n"
             '            "name": "attr_F",\n'
             '            "type": "Element",\n'
-            "        }\n"
+            "        },\n"
             "    )\n"
         )
 
