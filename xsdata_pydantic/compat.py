@@ -1,17 +1,19 @@
-from dataclasses import field
-from dataclasses import is_dataclass
-from typing import Any
+from dataclasses import MISSING
+from typing import Any, NamedTuple
 from typing import Callable
 from typing import Dict
 from typing import Generic
+from typing import Iterator
 from typing import List
 from typing import Optional
 from typing import Type
 from typing import TypeVar
 from xml.etree.ElementTree import QName
 
-from pydantic.dataclasses import dataclass
-from pydantic.validators import _VALIDATORS
+from pydantic import BaseModel
+from pydantic_core import core_schema
+from pydantic_core import PydanticUndefined
+from xsdata.formats.converter import converter
 from xsdata.formats.dataclass.compat import class_types
 from xsdata.formats.dataclass.compat import Dataclasses
 from xsdata.formats.dataclass.models.elements import XmlType
@@ -21,16 +23,25 @@ from xsdata.models.datatype import XmlDuration
 from xsdata.models.datatype import XmlPeriod
 from xsdata.models.datatype import XmlTime
 
+from xsdata_pydantic.fields import field
 
 T = TypeVar("T", bound=object)
+EMPTY_DICT: Dict = {}
+
+
+class FieldInfo(NamedTuple):
+    name: str
+    init: bool
+    metadata: Dict[Any, Any]
+    default: Any
+    default_factory: Any
 
 
 class Config:
     arbitrary_types_allowed = True
 
 
-@dataclass(config=Config)
-class AnyElement:
+class AnyElement(BaseModel):
     """
     Generic model to bind xml document data to wildcard fields.
 
@@ -52,8 +63,7 @@ class AnyElement:
     )
 
 
-@dataclass(config=Config)
-class DerivedElement(Generic[T]):
+class DerivedElement(BaseModel, Generic[T]):
     """
     Generic model wrapper for type substituted elements.
 
@@ -80,36 +90,47 @@ class Pydantic(Dataclasses):
 
     def is_model(self, obj: Any) -> bool:
         clazz = obj if isinstance(obj, type) else type(obj)
-        if is_dataclass(clazz) and hasattr(clazz, "__pydantic_model__"):
-            clazz.__pydantic_model__.update_forward_refs()  # type: ignore
-            return True
 
-        return False
+        return issubclass(clazz, BaseModel)
+
+    def get_fields(self, obj: Any) -> Iterator[FieldInfo]:
+        for name, info in obj.model_fields.items():
+            metadata = getattr(info, "xsdata_metadata", None) or EMPTY_DICT
+
+            yield FieldInfo(
+                name=name,
+                init=False if info.init_var is False else True,
+                metadata=metadata,
+                default=info.default
+                if info.default is not PydanticUndefined
+                else MISSING,
+                default_factory=info.default_factory
+                if info.default_factory
+                else MISSING,
+            )
 
 
 class_types.register("pydantic", Pydantic())
 
 
-def make_validators(tp: Type, factory: Callable) -> List[Callable]:
-    def validator(value: Any) -> Any:
-        if isinstance(value, tp):
-            return value
+def set_validator(data_type: Any):
+    def validator(
+        cls: Any,
+        _source_type: Any,
+        _handler: Callable[[Any], core_schema.CoreSchema],
+    ) -> core_schema.CoreSchema:
+        conv = converter.type_converter(data_type)
+        return core_schema.json_or_python_schema(
+            json_schema=core_schema.no_info_plain_validator_function(conv.deserialize),
+            python_schema=core_schema.is_instance_schema(data_type),
+            serialization=core_schema.plain_serializer_function_ser_schema(
+                conv.serialize
+            ),
+        )
 
-        if isinstance(value, str):
-            return factory(value)
-
-        raise ValueError
-
-    return [validator]
+    setattr(data_type, "__get_pydantic_core_schema__", classmethod(validator))  # noqa
 
 
-_VALIDATORS.extend(
-    [
-        (XmlDate, make_validators(XmlDate, XmlDate.from_string)),
-        (XmlDateTime, make_validators(XmlDateTime, XmlDateTime.from_string)),
-        (XmlTime, make_validators(XmlTime, XmlTime.from_string)),
-        (XmlDuration, make_validators(XmlDuration, XmlDuration)),
-        (XmlPeriod, make_validators(XmlPeriod, XmlPeriod)),
-        (QName, make_validators(QName, QName)),
-    ]
-)
+types = [XmlDate, XmlDateTime, XmlTime, XmlDuration, XmlPeriod, QName]
+for tp in types:
+    set_validator(tp)
