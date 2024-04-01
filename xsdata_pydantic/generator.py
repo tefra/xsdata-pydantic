@@ -1,11 +1,14 @@
 from typing import Dict
+from typing import List
+from typing import Optional
 
+from xsdata.codegen.models import Class, Attr
 from xsdata.formats.dataclass.filters import Filters
 from xsdata.formats.dataclass.generator import DataclassGenerator
 from xsdata.models.config import GeneratorConfig
 from xsdata.utils.text import stop_words
 
-stop_words.update(("schema", "validate"))
+stop_words.update(["validate"])
 
 
 class PydanticGenerator(DataclassGenerator):
@@ -17,21 +20,52 @@ class PydanticGenerator(DataclassGenerator):
 
 
 class PydanticFilters(Filters):
+    def __init__(self, config: GeneratorConfig):
+        config.output.format.kw_only = True
+        super().__init__(config)
+        self.default_class_annotation = None
+
+    def post_meta_hook(self, obj: Class) -> Optional[str]:
+        return "model_config = ConfigDict(defer_build=True)"
+
+    def class_bases(self, obj: Class, class_name: str) -> List[str]:
+        result = super().class_bases(obj, class_name)
+
+        if not obj.extensions:
+            result.insert(0, "BaseModel")
+        return result
+
+    def field_definition(
+        self,
+        attr: Attr,
+        ns_map: Dict,
+        parent_namespace: Optional[str],
+        parents: List[str],
+    ) -> str:
+        """Return the field definition with any extra metadata."""
+
+        result = super().field_definition(attr, ns_map, parent_namespace, parents)
+
+        if attr.is_prohibited:
+            result = result.replace("init=False", "exclude=True, default=None")
+        elif attr.fixed:
+            result = result.replace("init=False", "const=True")
+
+        return result
+
     @classmethod
     def build_import_patterns(cls) -> Dict[str, Dict]:
         patterns = super().build_import_patterns()
         patterns.update(
             {
-                "dataclasses": {"field": [" = field("]},
-                "pydantic.dataclasses": {"dataclass": ["@dataclass"]},
+                "dataclasses": {},
+                "xsdata_pydantic.fields": {"field": [" = field("]},
+                "pydantic": {
+                    "BaseModel": ["(BaseModel"],
+                    "Field": [" Field("],
+                    "ConfigDict": ["model_config = ConfigDict("],
+                },
             }
         )
 
         return {key: patterns[key] for key in sorted(patterns)}
-
-    @classmethod
-    def filter_metadata(cls, data: Dict) -> Dict:
-        data = super().filter_metadata(data)
-        data.pop("min_length", None)
-        data.pop("max_length", None)
-        return data

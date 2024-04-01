@@ -32,7 +32,7 @@ class BindingsTests(TestCase):
 
     def test_xml_bindings(self):
         serializer = XmlSerializer()
-        serializer.config.pretty_print = True
+        serializer.config.indent = "  "
         serializer.config.xml_declaration = False
         parser = XmlParser()
         ns_map = {
@@ -57,7 +57,7 @@ class BindingsTests(TestCase):
         self.assertEqual(self.obj, parser.from_string(expected))
 
     def test_serialize_json(self):
-        serializer = JsonSerializer(config=SerializerConfig(pretty_print=True))
+        serializer = JsonSerializer(config=SerializerConfig(indent="  "))
         parser = JsonParser()
 
         expected = (
