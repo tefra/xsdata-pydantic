@@ -25,16 +25,16 @@ classifiers = [
     "Topic :: Text Processing :: Markup :: XML",
 ]
 keywords = ["xsd", "wsdl", "schema", "dtd", "binding", "xml", "json", "dataclasses", "generator", "cli", "pydantic"]
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 dependencies = [
     "pydantic>=2.6",
-    "xsdata>=24.4",
+    "xsdata>=24.5",
 ]
 dynamic = ["version"]
 
 [project.readme]
-file = "README.rst"
-content-type = "text/x-rst"
+file = "README.md"
+content-type = "text/markdown"
 
 [project.urls]
 Homepage = "https://github.com/tefra/xsdata-pydantic"
@@ -49,11 +49,16 @@ Changelog = "https://xsdata-pydantic.readthedocs.io/en/latest/changelog.html"
 xsdata_pydantic = "xsdata_pydantic.hooks.class_type"
 
 [project.optional-dependencies]
-cli = ["xsdata[cli]>=23.5"]
+cli = ["xsdata[cli]>=24.5"]
 docs = [
-    "furo",
-    "sphinx",
-    "sphinx-autobuild",
+    "mkdocs",
+    "mkdocs-gen-files",
+    "mkdocs-literate-nav",
+    "mkdocs-material",
+    "mkdocs-minify-plugin",
+    "mkdocstrings[python]",
+    "markdown-exec[ansi]",
+    "pymdownx-superfence-filter-lines",
 ]
 lxml = ["lxml>=4.4.1"]
 soap = ["requests"]

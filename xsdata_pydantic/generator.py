@@ -37,14 +37,13 @@ class PydanticFilters(Filters):
 
     def field_definition(
         self,
+        obj: Class,
         attr: Attr,
-        ns_map: Dict,
         parent_namespace: Optional[str],
-        parents: List[str],
     ) -> str:
         """Return the field definition with any extra metadata."""
 
-        result = super().field_definition(attr, ns_map, parent_namespace, parents)
+        result = super().field_definition(obj, attr, parent_namespace)
 
         if attr.is_prohibited:
             result = result.replace("init=False", "exclude=True, default=None")

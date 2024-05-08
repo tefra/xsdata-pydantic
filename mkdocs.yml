@@ -1,0 +1,99 @@
+site_name: "xsdata-pydantic"
+site_url: https://xsdata-pydantic.readthedocs.io/
+site_description: >-
+  xsData is a complete data binding library for python allowing developers to
+  access and use XML and JSON documents as simple objects rather than using DOM.
+repo_name: tefra/xsdata-pydantic
+repo_url: https://github.com/tefra/xsdata-pydantic
+edit_uri: edit/main/docs/
+exclude_docs: |
+  scripts/
+  __pycache__/
+
+
+theme:
+  name: 'material'
+  palette:
+  - media: "(prefers-color-scheme: light)"
+    scheme: default
+    primary: white
+    accent: deep purple
+    toggle:
+      icon: material/lightbulb-outline
+      name: "Switch to dark mode"
+  - media: "(prefers-color-scheme: dark)"
+    scheme: slate
+    primary: black
+    accent: deep purple
+    toggle:
+      icon: material/lightbulb
+      name: "Switch to light mode"
+  features:
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
+    - content.code.copy
+    - content.tooltips
+    - navigation.tabs
+    - navigation.footer
+    - navigation.top
+    - content.tabs.link
+    - search.suggest
+    - toc.integrate
+  logo: 'logo-small.svg'
+  favicon: 'favicon.png'
+
+watch:
+  - xsdata_pydantic
+
+plugins:
+- search
+- minify:
+    minify_html: true
+- markdown-exec
+- mkdocstrings:
+    handlers:
+      python:
+        load_external_modules: true
+        options:
+          members_order: source
+          show_source: true
+          show_root_heading: true
+        import:
+        - https://docs.python-requests.org/en/master/objects.inv
+        - https://docs.python.org/3/objects.inv
+        - https://lxml.de/apidoc/objects.inv
+        - https://xsdata.readthedocs.io/en/latest/objects.inv
+        - https://docs.pydantic.dev/latest/objects.inv
+
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: "*"
+          class: "highlight"
+          format: !!python/name:pymdownx_superfence_filter_lines.do_format
+          validator: !!python/name:pymdownx_superfence_filter_lines.do_validate
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+
+nav:
+
+- Get Started:
+  - Welcome to xsdata-pydantic: index.md
+  - Installation: installation.md
+  - Changelog: changelog.md
+  - PyPI: https://pypi.org/project/xsdata-pydantic/
+  - Conda: https://anaconda.org/conda-forge/xsdata-pydantic
+- Code Generation: codegen.md
+- Data Binding: bindings.md
+- Common Issues: issues.md

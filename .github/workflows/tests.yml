@@ -46,16 +46,17 @@ jobs:
           - { name: "Common Types", id: "common-types" }
 #          - { name: "Crossref Metadata", id: "crossref" }
           - { name: "DateX II", id: "datexii" }
-#          - { name: "EWP", id: "ewp" }  different bytes output
+#          - { name: "EWP", id: "ewp" }
           - { name: "Generali", id: "generali", skip_mypy: true }
-#          - { name: "NeTEx", id: "netex" } The chances of working with pydantic is zero
+#          - { name: "NeTEx", id: "netex" }
           - { name: "NPO API", id: "npo" }
           - { name: "ReqIF", id: "reqif" }
           - { name: "Sabre", id: "sabre" }
           - { name: "Sdmx-ml", id: "sdmx-ml", skip_mypy: true }
-#          - { name: "SpaceX", id: "spacex" } Next xsdata release
+          - { name: "SpaceX", id: "spacex" }
+          - { name: "TPDB", id: "tpdb" }
           - { name: "Travelport", id: "travelport" }
-#          - { name: "UBL", id: "ubl" }  different bytes output
+#          - { name: "UBL", id: "ubl" }
           - { name: "Voko", id: "voko" }
           - { name: "XCBL", id: "xcbl" }
     steps:
@@ -78,7 +79,6 @@ jobs:
         working-directory: ./xsdata-samples
         run: invoke ${{ matrix.collection.id }}.build --output-format=pydantic
       - name: Run Tests
-        if: matrix.python != '3.13-dev' || matrix.collection.id != 'netex'
         working-directory: ./xsdata-samples
         run: invoke ${{ matrix.collection.id }}.test --output-format=pydantic
       - name: Run mypy
