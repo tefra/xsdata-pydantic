@@ -25,10 +25,10 @@ classifiers = [
     "Topic :: Text Processing :: Markup :: XML",
 ]
 keywords = ["xsd", "wsdl", "schema", "dtd", "binding", "xml", "json", "dataclasses", "generator", "cli", "pydantic"]
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 dependencies = [
     "pydantic>=2.6",
-    "xsdata>=24.4",
+    "xsdata>=24.5",
 ]
 dynamic = ["version"]
 
@@ -49,7 +49,7 @@ Changelog = "https://xsdata-pydantic.readthedocs.io/en/latest/changelog.html"
 xsdata_pydantic = "xsdata_pydantic.hooks.class_type"
 
 [project.optional-dependencies]
-cli = ["xsdata[cli]>=23.5"]
+cli = ["xsdata[cli]>=24.5"]
 docs = [
     "furo",
     "sphinx",
