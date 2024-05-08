@@ -1,4 +1,4 @@
-include LICENSE README.rst CHANGES.rst tox.ini
+include LICENSE README.md CHANGES.md
 recursive-include docs *
 recursive-include tests *
 recursive-include xsdata_pydantic *
