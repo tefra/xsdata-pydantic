@@ -5,7 +5,6 @@
 [![image](https://github.com/tefra/xsdata-pydantic/workflows/tests/badge.svg)](https://github.com/tefra/xsdata-pydantic/actions)
 [![image](https://readthedocs.org/projects/xsdata-pydantic/badge)](https://xsdata-pydantic.readthedocs.io/)
 [![image](https://codecov.io/gh/tefra/xsdata-pydantic/branch/main/graph/badge.svg)](https://codecov.io/gh/tefra/xsdata-pydantic)
-[![image](https://img.shields.io/github/languages/top/tefra/xsdata-pydantic.svg)](https://xsdata-pydantic.readthedocs.io/)
 [![image](https://www.codefactor.io/repository/github/tefra/xsdata-pydantic/badge)](https://www.codefactor.io/repository/github/tefra/xsdata-pydantic)
 [![image](https://img.shields.io/pypi/pyversions/xsdata-pydantic.svg)](https://pypi.org/pypi/xsdata-pydantic/)
 [![image](https://img.shields.io/pypi/v/xsdata-pydantic.svg)](https://pypi.org/pypi/xsdata-pydantic/)
