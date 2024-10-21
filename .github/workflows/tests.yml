@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: [ "3.8", "3.9", "3.10", "3.11", "3.12" ]
+        python: [ "3.9", "3.10", "3.11", "3.12" ]
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python }}
@@ -45,11 +45,9 @@ jobs:
           - { name: "Autosar", id: "autosar" }
           - { name: "BPMN", id: "bpmn" }
           - { name: "Common Types", id: "common-types" }
-#          - { name: "Crossref Metadata", id: "crossref" }
           - { name: "DateX II", id: "datexii" }
           - { name: "EWP", id: "ewp" }
           - { name: "Generali", id: "generali", skip_mypy: true }
-#          - { name: "NeTEx", id: "netex" }
           - { name: "NPO API", id: "npo" }
           - { name: "ReqIF", id: "reqif" }
           - { name: "Sabre", id: "sabre" }
