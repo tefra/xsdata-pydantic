@@ -18,7 +18,7 @@ def field(
     default: Any = PydanticUndefined,
     default_factory: Optional[Callable[[], Any]] = PydanticUndefined,
     **kwargs: Any,
-):
+) -> Any:
     return FieldInfo(
         metadata=metadata, default=default, default_factory=default_factory, **kwargs
     )
