@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:xoev-code="http://xoev.de/schemata/code/1_0"
+           targetNamespace="http://xoev.de/schemata/code/1_0"
+           version="1.0"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
+   <xs:complexType name="Code">
+      <xs:annotation>
+         <xs:appinfo>
+            <datentyp>
+               <nameLang>XÖV-Datentyp Code</nameLang>
+               <nameKurz>Code</nameKurz>
+               <nameTechnisch>Code</nameTechnisch>
+               <kennung>urn:xoev-de:kosit:xoev:datentyp:code</kennung>
+               <externeWebsite>http://www.xoev.de/de/code</externeWebsite>
+            </datentyp>
+            <versionDatentyp>
+               <version>1.0</version>
+               <lizenz>Creative Commons Namensnennung - Keine Bearbeitung 4.0 International</lizenz>
+               <bezugsort>http://www.xoev.de/de/bibliothek</bezugsort>
+            </versionDatentyp>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="code" type="xs:token" form="unqualified">
+            <xs:annotation>
+               <xs:documentation>In diesem XML-Element wird der Code einer Codeliste übermittelt.</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="name"
+                     minOccurs="0"
+                     type="xs:normalizedString"
+                     form="unqualified">
+         </xs:element>
+      </xs:sequence>
+      <xs:attribute name="listURI" type="xs:anyURI" use="optional">
+      </xs:attribute>
+      <xs:attribute name="listVersionID" type="xs:normalizedString" use="optional">
+      </xs:attribute>
+   </xs:complexType>
+</xs:schema>

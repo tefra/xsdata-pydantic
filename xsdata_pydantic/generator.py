@@ -46,7 +46,15 @@ class PydanticFilters(Filters):
         result = super().field_definition(obj, attr, parent_namespace)
 
         if attr.is_prohibited:
-            result = result.replace("init=False", "exclude=True, default=None")
+            # If the field is optional and has no other default, the base generator would add default=None.
+            # Prohibited fields are not initialized, so base generator adds init=False.
+            if attr.is_optional and attr.default is None:
+                # Base class already added default=None. Just replace init=False with exclude=True.
+                result = result.replace("init=False", "exclude=True")
+            else:
+                # Base class did NOT add default=None (e.g., field is required or has another default).
+                # Replace init=False with exclude=True and also add default=None for consistency with Pydantic's exclude.
+                result = result.replace("init=False", "exclude=True, default=None")
         elif attr.fixed:
             result = result.replace("init=False", "const=True")
 

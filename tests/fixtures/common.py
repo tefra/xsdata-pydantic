@@ -17,5 +17,7 @@ class TypeB(TypeA):
 
 
 class TypeC(TypeB):
-    four: List[datetime] = field(default_factory=list, metadata={"format": "%d %B %Y %H:%M"})
+    four: List[datetime] = field(
+        default_factory=list, metadata={"format": "%d %B %Y %H:%M"}
+    )
     any: Optional[object] = field(default=None, metadata={"type": "Wildcard"})
