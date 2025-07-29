@@ -13,6 +13,7 @@ from xml.etree.ElementTree import QName
 from pydantic import BaseModel
 from pydantic_core import core_schema
 from pydantic_core import PydanticUndefined
+from pydantic_core.core_schema import str_schema
 from xsdata.formats.converter import converter
 from xsdata.formats.dataclass.compat import class_types
 from xsdata.formats.dataclass.compat import Dataclasses
@@ -121,7 +122,10 @@ def set_validator(data_type: Any):
     ) -> core_schema.CoreSchema:
         conv = converter.type_converter(data_type)
         return core_schema.json_or_python_schema(
-            json_schema=core_schema.no_info_plain_validator_function(conv.deserialize),
+            json_schema=core_schema.no_info_plain_validator_function(
+                conv.deserialize,
+                json_schema_input_schema=str_schema(),
+            ),
             python_schema=core_schema.is_instance_schema(data_type),
             serialization=core_schema.plain_serializer_function_ser_schema(
                 conv.serialize
