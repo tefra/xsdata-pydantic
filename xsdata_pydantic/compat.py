@@ -94,6 +94,8 @@ class Pydantic(Dataclasses):
         return issubclass(clazz, BaseModel)
 
     def get_fields(self, obj: Any) -> Iterator[FieldInfo]:
+        if isinstance(obj, BaseModel):
+            obj = type(obj)
         for name, info in obj.model_fields.items():
             metadata = getattr(info, "xsdata_metadata", None) or EMPTY_DICT
 
