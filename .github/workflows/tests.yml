@@ -16,9 +16,9 @@ jobs:
       matrix:
         python: [ "3.9", "3.10", "3.11", "3.12" ]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python }}
       - name: Install dependencies
@@ -59,15 +59,15 @@ jobs:
           - { name: "Voko", id: "voko" }
           - { name: "XCBL", id: "xcbl" }
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+      - uses: actions/checkout@v5
         with:
           repository: tefra/xsdata-samples
           ref: main
           submodules: true
           path: xsdata-samples
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python }}
       - name: Install dependencies
@@ -88,12 +88,12 @@ jobs:
     name: Pre-commit Hooks
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
+    - uses: actions/checkout@v5
+    - uses: actions/setup-python@v6
     - uses: pre-commit/action@v3.0.1
   check-package:
     name: Build & Inspect Package.
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: hynek/build-and-inspect-python-package@v2
