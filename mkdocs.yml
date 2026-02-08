@@ -55,16 +55,16 @@ plugins:
     handlers:
       python:
         load_external_modules: true
-        options:
-          members_order: source
-          show_source: true
-          show_root_heading: true
-        import:
+        inventories:
         - https://docs.python-requests.org/en/master/objects.inv
         - https://docs.python.org/3/objects.inv
         - https://lxml.de/apidoc/objects.inv
         - https://xsdata.readthedocs.io/en/latest/objects.inv
         - https://docs.pydantic.dev/latest/objects.inv
+        options:
+          members_order: source
+          show_source: true
+          show_root_heading: true
 
 
 markdown_extensions:
@@ -73,10 +73,6 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.superfences:
       custom_fences:
-        - name: "*"
-          class: "highlight"
-          format: !!python/name:pymdownx_superfence_filter_lines.do_format
-          validator: !!python/name:pymdownx_superfence_filter_lines.do_validate
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format

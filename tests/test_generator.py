@@ -10,12 +10,12 @@ from xsdata_pydantic.generator import PydanticGenerator
 
 
 class PydanticGeneratorTests(FactoryTestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         super().setUp()
         config = GeneratorConfig()
         self.generator = PydanticGenerator(config)
 
-    def test_complete(self):
+    def test_complete(self) -> None:
         runner = CliRunner()
         schema = Path(__file__).parent.joinpath("fixtures/schemas/po.xsd")
         os.chdir(Path(__file__).parent.parent)
@@ -23,6 +23,7 @@ class PydanticGeneratorTests(FactoryTestCase):
         result = runner.invoke(
             cli,
             [
+                "generate",
                 str(schema),
                 "--package",
                 "tests.fixtures.po.models",

@@ -1,49 +1,38 @@
+from collections.abc import Callable, Iterator
 from dataclasses import MISSING
-from typing import Any, NamedTuple
-from typing import Callable
-from typing import Dict
-from typing import Generic
-from typing import Iterator
-from typing import List
-from typing import Optional
-from typing import Type
-from typing import TypeVar
+from typing import (
+    Any,
+    Generic,
+    NamedTuple,
+    TypeVar,
+)
 from xml.etree.ElementTree import QName
 
 from pydantic import BaseModel
-from pydantic_core import core_schema
-from pydantic_core import PydanticUndefined
+from pydantic_core import PydanticUndefined, core_schema
 from xsdata.formats.converter import converter
-from xsdata.formats.dataclass.compat import class_types
 from xsdata.formats.dataclass.compat import Dataclasses
 from xsdata.formats.dataclass.models.elements import XmlType
-from xsdata.models.datatype import XmlDate
-from xsdata.models.datatype import XmlDateTime
-from xsdata.models.datatype import XmlDuration
-from xsdata.models.datatype import XmlPeriod
-from xsdata.models.datatype import XmlTime
+from xsdata.models.datatype import XmlDate, XmlDateTime, XmlDuration, XmlPeriod, XmlTime
 
 from xsdata_pydantic.fields import field
 
 T = TypeVar("T", bound=object)
-EMPTY_DICT: Dict = {}
+EMPTY_DICT: dict = {}
 
 
 class FieldInfo(NamedTuple):
+    """A wrapper for pydantic model field information."""
+
     name: str
     init: bool
-    metadata: Dict[Any, Any]
+    metadata: dict[Any, Any]
     default: Any
     default_factory: Any
 
 
-class Config:
-    arbitrary_types_allowed = True
-
-
 class AnyElement(BaseModel):
-    """
-    Generic model to bind xml document data to wildcard fields.
+    """Generic model to bind xml document data to wildcard fields.
 
     :param qname: The element's qualified name
     :param text: The element's text content
@@ -52,20 +41,19 @@ class AnyElement(BaseModel):
     :param attributes: The element's key-value attribute mappings.
     """
 
-    qname: Optional[str] = field(default=None)
-    text: Optional[str] = field(default=None)
-    tail: Optional[str] = field(default=None)
-    children: List[object] = field(
+    qname: str | None = field(default=None)
+    text: str | None = field(default=None)
+    tail: str | None = field(default=None)
+    children: list[object] = field(
         default_factory=list, metadata={"type": XmlType.WILDCARD}
     )
-    attributes: Dict[str, str] = field(
+    attributes: dict[str, str] = field(
         default_factory=dict, metadata={"type": XmlType.ATTRIBUTES}
     )
 
 
 class DerivedElement(BaseModel, Generic[T]):
-    """
-    Generic model wrapper for type substituted elements.
+    """Generic model wrapper for type substituted elements.
 
     Example: eg. <b xsi:type="a">...</b>
 
@@ -76,30 +64,43 @@ class DerivedElement(BaseModel, Generic[T]):
 
     qname: str
     value: T
-    type: Optional[str] = None
+    type: str | None = None
 
 
 class Pydantic(Dataclasses):
+    """Pydantic class type for xsdata."""
+
     @property
-    def any_element(self) -> Type:
+    def any_element(self) -> type:
+        """Return the AnyElement class."""
         return AnyElement
 
     @property
-    def derived_element(self) -> Type:
+    def derived_element(self) -> type:
+        """Return the DerivedElement class."""
         return DerivedElement
 
     def is_model(self, obj: Any) -> bool:
+        """Return whether the given value is a pydantic model."""
         clazz = obj if isinstance(obj, type) else type(obj)
-
         return issubclass(clazz, BaseModel)
 
+    def verify_model(self, obj: Any) -> None:
+        """Verify the given value is a pydantic model."""
+        if not self.is_model(obj):
+            from xsdata.exceptions import XmlContextError
+
+            raise XmlContextError(f"Type '{obj}' is not a pydantic model.")
+
     def get_fields(self, obj: Any) -> Iterator[FieldInfo]:
-        for name, info in obj.model_fields.items():
+        """Return the model's fields as FieldInfo instances."""
+        clazz = obj if isinstance(obj, type) else type(obj)
+        for name, info in clazz.model_fields.items():
             metadata = getattr(info, "xsdata_metadata", None) or EMPTY_DICT
 
             yield FieldInfo(
                 name=name,
-                init=False if info.init_var is False else True,
+                init=info.init_var is not False,
                 metadata=metadata,
                 default=info.default
                 if info.default is not PydanticUndefined
@@ -110,10 +111,9 @@ class Pydantic(Dataclasses):
             )
 
 
-class_types.register("pydantic", Pydantic())
+def set_validator(data_type: Any) -> None:
+    """Monkey-patch __get_pydantic_core_schema__ onto an xsdata type."""
 
-
-def set_validator(data_type: Any):
     def validator(
         cls: Any,
         _source_type: Any,

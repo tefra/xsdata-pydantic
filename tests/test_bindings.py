@@ -2,15 +2,12 @@ from datetime import datetime
 from unittest import TestCase
 
 from tests.fixtures.common import TypeC
-
-from xsdata_pydantic.bindings import XmlParser
-from xsdata_pydantic.bindings import XmlSerializer
-from xsdata_pydantic.compat import AnyElement
-from xsdata_pydantic.compat import DerivedElement
+from xsdata_pydantic.bindings import XmlParser, XmlSerializer
+from xsdata_pydantic.compat import AnyElement, DerivedElement
 
 
 class BindingsTests(TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.obj = TypeC(
             one="first",
             two=1.1,
@@ -27,7 +24,7 @@ class BindingsTests(TestCase):
             ),
         )
 
-    def test_xml_bindings(self):
+    def test_xml_bindings(self) -> None:
         serializer = XmlSerializer()
         serializer.config.indent = "  "
         serializer.config.xml_declaration = False

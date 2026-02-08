@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -17,5 +16,5 @@ class TypeB(TypeA):
 
 
 class TypeC(TypeB):
-    four: List[datetime] = field(default_factory=list, metadata={"format": "%d %B %Y %H:%M"})
-    any: Optional[object] = field(default=None, metadata={"type": "Wildcard"})
+    four: list[datetime] = field(default_factory=list, metadata={"format": "%d %B %Y %H:%M"})
+    any: object | None = field(default=None, metadata={"type": "Wildcard"})

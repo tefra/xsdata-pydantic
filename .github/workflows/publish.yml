@@ -1,6 +1,7 @@
 name: Publish Python 🐍 distributions 📦 to PyPI and TestPyPI
 
 on:
+  workflow_dispatch:
   release:
     types: [released]
 
@@ -14,11 +15,11 @@ jobs:
     permissions:
       id-token: write
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v5
+    - uses: actions/checkout@v6
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v6
       with:
-        python-version: 3.9
+        python-version: 3.11
     - name: Install pypa/build
       run: >-
         python -m
@@ -26,16 +27,23 @@ jobs:
         build
         --user
     - name: Build a binary wheel and a source tarball
-      run: >-
-        python -m
-        build
-        --sdist
-        --wheel
-        --outdir dist/
-        .
+      run: python3 -m build
+    - name: Store the distribution packages
+      uses: actions/upload-artifact@v6
+      with:
+        name: python-package-distributions
+        path: dist/
+    - name: Download all the dists
+      uses: actions/download-artifact@v7
+      with:
+        name: python-package-distributions
+        path: dist
     - name: Publish distribution 📦 to Test PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         repository-url: https://test.pypi.org/legacy/
     - name: Publish distribution 📦 to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        # Temporary workaround for https://github.com/pypa/gh-action-pypi-publish/issues/283
+        attestations: false

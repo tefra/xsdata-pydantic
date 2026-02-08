@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from decimal import Decimal
-from typing import List, Optional
 
 from pydantic import BaseModel, ConfigDict
 from xsdata.models.datatype import XmlDate
@@ -18,35 +19,30 @@ class Usaddress(BaseModel):
         metadata={
             "type": "Element",
             "namespace": "foo",
-            "required": True,
         }
     )
     street: str = field(
         metadata={
             "type": "Element",
             "namespace": "foo",
-            "required": True,
         }
     )
     city: str = field(
         metadata={
             "type": "Element",
             "namespace": "foo",
-            "required": True,
         }
     )
     state: str = field(
         metadata={
             "type": "Element",
             "namespace": "foo",
-            "required": True,
         }
     )
     zip: Decimal = field(
         metadata={
             "type": "Element",
             "namespace": "foo",
-            "required": True,
         }
     )
     country: str = field(
@@ -64,17 +60,12 @@ class Comment(BaseModel):
         namespace = "foo"
 
     model_config = ConfigDict(defer_build=True)
-    value: str = field(
-        default="",
-        metadata={
-            "required": True,
-        },
-    )
+    value: str = field(default="")
 
 
 class Items(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    item: List["Items.Item"] = field(
+    item: list[Items.Item] = field(
         default_factory=list,
         metadata={
             "type": "Element",
@@ -89,14 +80,12 @@ class Items(BaseModel):
                 "name": "productName",
                 "type": "Element",
                 "namespace": "foo",
-                "required": True,
             }
         )
         quantity: int = field(
             metadata={
                 "type": "Element",
                 "namespace": "foo",
-                "required": True,
                 "max_exclusive": 100,
             }
         )
@@ -105,17 +94,16 @@ class Items(BaseModel):
                 "name": "USPrice",
                 "type": "Element",
                 "namespace": "foo",
-                "required": True,
             }
         )
-        comment: Optional[Comment] = field(
+        comment: None | Comment = field(
             default=None,
             metadata={
                 "type": "Element",
                 "namespace": "foo",
             },
         )
-        ship_date: Optional[XmlDate] = field(
+        ship_date: None | XmlDate = field(
             default=None,
             metadata={
                 "name": "shipDate",
@@ -127,7 +115,6 @@ class Items(BaseModel):
             metadata={
                 "name": "partNum",
                 "type": "Attribute",
-                "required": True,
                 "pattern": r"\d{3}-[A-Z]{2}",
             }
         )
@@ -140,7 +127,6 @@ class PurchaseOrderType(BaseModel):
             "name": "shipTo",
             "type": "Element",
             "namespace": "foo",
-            "required": True,
         }
     )
     bill_to: Usaddress = field(
@@ -148,10 +134,9 @@ class PurchaseOrderType(BaseModel):
             "name": "billTo",
             "type": "Element",
             "namespace": "foo",
-            "required": True,
         }
     )
-    comment: Optional[Comment] = field(
+    comment: None | Comment = field(
         default=None,
         metadata={
             "type": "Element",
@@ -162,10 +147,9 @@ class PurchaseOrderType(BaseModel):
         metadata={
             "type": "Element",
             "namespace": "foo",
-            "required": True,
         }
     )
-    order_date: Optional[XmlDate] = field(
+    order_date: None | XmlDate = field(
         default=None,
         metadata={
             "name": "orderDate",

@@ -1,10 +1,7 @@
-from dataclasses import dataclass
-from dataclasses import field
-from typing import Callable, Optional
+from collections.abc import Callable
+from dataclasses import dataclass, field
 
-from xsdata.formats.dataclass import context
-from xsdata.formats.dataclass import parsers
-from xsdata.formats.dataclass import serializers
+from xsdata.formats.dataclass import context, parsers, serializers
 from xsdata.utils.constants import return_input
 
 
@@ -29,8 +26,9 @@ class XmlContext(context.XmlContext):
         self,
         element_name_generator: Callable = return_input,
         attribute_name_generator: Callable = return_input,
-        models_package: Optional[str] = None,
+        models_package: str | None = None,
     ):
+        """Initialize the context with the pydantic class type."""
         super().__init__(
             element_name_generator, attribute_name_generator, "pydantic", models_package
         )
@@ -38,12 +36,12 @@ class XmlContext(context.XmlContext):
 
 @dataclass
 class XmlParser(parsers.XmlParser):
-    """Default Xml parser for attrs.
+    """Default XML parser for attrs.
 
     Args:
         config: The parser config instance
-        context: The xml context instance
-        handler: The xml handler class
+        context: The XML context instance
+        handler: The XML handler class
 
     Attributes:
         ns_map: The parsed namespace prefix-URI map
@@ -54,12 +52,12 @@ class XmlParser(parsers.XmlParser):
 
 @dataclass
 class XmlSerializer(serializers.XmlSerializer):
-    """Xml serializer for attrs.
+    """XML serializer for pydantic models.
 
     Args:
         config: The serializer config instance
         context: The models context instance
-        writer: The xml writer class
+        writer: The XML writer class
     """
 
     context: XmlContext = field(default_factory=XmlContext)
@@ -67,12 +65,12 @@ class XmlSerializer(serializers.XmlSerializer):
 
 @dataclass
 class JsonParser(parsers.JsonParser):
-    """Json parser for attrs.
+    """JSON parser for pydantic models.
 
     Args:
         config: Parser configuration
         context: The models context instance
-        load_factory: Json loader factory
+        load_factory: JSON loader factory
     """
 
     context: XmlContext = field(default_factory=XmlContext)
@@ -80,7 +78,7 @@ class JsonParser(parsers.JsonParser):
 
 @dataclass
 class DictDecoder(parsers.DictDecoder):
-    """Bind a dictionary or a list of dictionaries to attrs.
+    """Bind a dictionary or a list of dictionaries for pydantic models.
 
     Args:
         config: Parser configuration
@@ -92,7 +90,7 @@ class DictDecoder(parsers.DictDecoder):
 
 @dataclass
 class DictEncoder(serializers.DictEncoder):
-    """Bind a dictionary or a list of dictionaries to attrs.
+    """Bind a dictionary or a list of dictionaries for pydantic models.
 
     Args:
         config: Parser configuration
@@ -104,13 +102,13 @@ class DictEncoder(serializers.DictEncoder):
 
 @dataclass
 class JsonSerializer(serializers.JsonSerializer):
-    """Json serializer for attrs.
+    """JSON serializer for attrs.
 
     Args:
         config: The serializer config instance
         context: The models context instance
         dict_factory: Dictionary factory
-        dump_factory: Json dump factory e.g. json.dump
+        dump_factory: JSON dump factory e.g. json.dump
     """
 
     context: XmlContext = field(default_factory=XmlContext)
@@ -118,15 +116,15 @@ class JsonSerializer(serializers.JsonSerializer):
 
 @dataclass
 class UserXmlParser(parsers.UserXmlParser):
-    """Xml parser for attrs with hooks to events.
+    """XML parser for attrs with hooks to events.
 
     The event hooks allow custom parsers to inject custom
     logic between the start/end element events.
 
     Args:
         config: The parser config instance
-        context: The xml context instance
-        handler: The xml handler class
+        context: The XML context instance
+        handler: The XML handler class
 
     Attributes:
         ns_map: The parsed namespace prefix-URI map
@@ -140,7 +138,7 @@ class UserXmlParser(parsers.UserXmlParser):
 
 @dataclass
 class TreeParser(parsers.TreeParser):
-    """Bind xml nodes to a tree of AnyElement objects."""
+    """Bind XML nodes to a tree of AnyElement objects."""
 
     context: XmlContext = field(default_factory=XmlContext)
 
