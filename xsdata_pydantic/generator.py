@@ -1,8 +1,4 @@
-from typing import Dict
-from typing import List
-from typing import Optional
-
-from xsdata.codegen.models import Class, Attr
+from xsdata.codegen.models import Attr, Class
 from xsdata.formats.dataclass.filters import Filters
 from xsdata.formats.dataclass.generator import DataclassGenerator
 from xsdata.models.config import GeneratorConfig
@@ -16,19 +12,25 @@ class PydanticGenerator(DataclassGenerator):
 
     @classmethod
     def init_filters(cls, config: GeneratorConfig) -> Filters:
+        """Initialize the pydantic filters."""
         return PydanticFilters(config)
 
 
 class PydanticFilters(Filters):
+    """Pydantic specific template filters."""
+
     def __init__(self, config: GeneratorConfig):
+        """Initialize with kw_only enabled."""
         config.output.format.kw_only = True
         super().__init__(config)
         self.default_class_annotation = None
 
-    def post_meta_hook(self, obj: Class) -> Optional[str]:
+    def post_meta_hook(self, obj: Class) -> str | None:
+        """Inject model_config with deferred build."""
         return "model_config = ConfigDict(defer_build=True)"
 
-    def class_bases(self, obj: Class, class_name: str) -> List[str]:
+    def class_bases(self, obj: Class, class_name: str) -> list[str]:
+        """Add BaseModel as a base class for models without extensions."""
         result = super().class_bases(obj, class_name)
 
         if not obj.extensions:
@@ -39,21 +41,21 @@ class PydanticFilters(Filters):
         self,
         obj: Class,
         attr: Attr,
-        parent_namespace: Optional[str],
+        parent_namespace: str | None,
     ) -> str:
         """Return the field definition with any extra metadata."""
-
         result = super().field_definition(obj, attr, parent_namespace)
 
         if attr.is_prohibited:
-            result = result.replace("init=False", "exclude=True, default=None")
+            result = result.replace("init=False", "exclude=True")
         elif attr.fixed:
             result = result.replace("init=False", "const=True")
 
         return result
 
     @classmethod
-    def build_import_patterns(cls) -> Dict[str, Dict]:
+    def build_import_patterns(cls) -> dict[str, dict]:
+        """Build import patterns replacing dataclasses with pydantic imports."""
         patterns = super().build_import_patterns()
         patterns.update(
             {
