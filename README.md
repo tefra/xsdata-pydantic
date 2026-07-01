@@ -64,8 +64,6 @@ class Rss(BaseModel):
 
 ```
 
-## Changelog: 24.5 (2024-05-08)
+## Changelog: 26.2 (2026-06-30)
 
-- Support pydantic v2 models
-- Add missing parser/serializer shortcuts
-- General project maintenance
+- Use pydantic-xml

@@ -1,4 +1,3 @@
-from typing import Dict
 from typing import List
 from typing import Optional
 
@@ -26,13 +25,14 @@ class PydanticFilters(Filters):
         self.default_class_annotation = None
 
     def post_meta_hook(self, obj: Class) -> Optional[str]:
-        return "model_config = ConfigDict(defer_build=True)"
+        return
 
     def class_bases(self, obj: Class, class_name: str) -> List[str]:
         result = super().class_bases(obj, class_name)
 
         if not obj.extensions:
-            result.insert(0, "BaseModel")
+            result.insert(0, "BaseXmlModel")
+            result.append(f'tag="{obj.name}"')
         return result
 
     def field_definition(
@@ -43,26 +43,36 @@ class PydanticFilters(Filters):
     ) -> str:
         """Return the field definition with any extra metadata."""
 
-        result = super().field_definition(obj, attr, parent_namespace)
+        ns_map = obj.ns_map
+        default_value = self.field_default_value(attr, ns_map)
 
-        if attr.is_prohibited:
-            result = result.replace("init=False", "exclude=True, default=None")
-        elif attr.fixed:
-            result = result.replace("init=False", "const=True")
+        kwargs = {}
+        if (
+            parent_namespace != attr.namespace
+            or attr.is_attribute
+            and attr.namespace is not None
+        ):
+            kwargs["ns"] = attr.namespace
+        if default_value is not False and not attr.is_prohibited:
+            kwargs["default_factory" if attr.is_factory else "default"] = default_value
 
-        return result
+        if attr.is_element:
+            kwargs["tag"] = attr.local_name
+            return f"element({self.format_arguments(kwargs, 4)})"
+
+        kwargs["name"] = attr.local_name
+        return f"attr({self.format_arguments(kwargs, 4)})"
 
     @classmethod
-    def build_import_patterns(cls) -> Dict[str, Dict]:
+    def build_import_patterns(cls) -> dict[str, dict]:
         patterns = super().build_import_patterns()
         patterns.update(
             {
                 "dataclasses": {},
-                "xsdata_pydantic.fields": {"field": [" = field("]},
-                "pydantic": {
-                    "BaseModel": ["(BaseModel"],
-                    "Field": [" Field("],
-                    "ConfigDict": ["model_config = ConfigDict("],
+                "pydantic_xml": {
+                    "BaseXmlModel": ["(BaseXmlModel"],
+                    "attr": [" = attr("],
+                    "element": [" = element("],
                 },
             }
         )

@@ -1,7 +1,7 @@
 from decimal import Decimal
 from typing import List, Optional
 
-from pydantic import BaseModel, ConfigDict
+from pydantic_xml import BaseXmlModel, attr, element
 from xsdata.models.datatype import XmlDate
 
 from xsdata_pydantic.fields import field
@@ -9,163 +9,104 @@ from xsdata_pydantic.fields import field
 __NAMESPACE__ = "foo"
 
 
-class Usaddress(BaseModel):
+class Usaddress(BaseXmlModel):
     class Meta:
         name = "USAddress"
 
-    model_config = ConfigDict(defer_build=True)
-    name: str = field(
-        metadata={
-            "type": "Element",
-            "namespace": "foo",
-            "required": True,
-        }
+    name: str = element(
+        tag="name",
+        ns="foo",
     )
-    street: str = field(
-        metadata={
-            "type": "Element",
-            "namespace": "foo",
-            "required": True,
-        }
+    street: str = element(
+        tag="street",
+        ns="foo",
     )
-    city: str = field(
-        metadata={
-            "type": "Element",
-            "namespace": "foo",
-            "required": True,
-        }
+    city: str = element(
+        tag="city",
+        ns="foo",
     )
-    state: str = field(
-        metadata={
-            "type": "Element",
-            "namespace": "foo",
-            "required": True,
-        }
+    state: str = element(
+        tag="state",
+        ns="foo",
     )
-    zip: Decimal = field(
-        metadata={
-            "type": "Element",
-            "namespace": "foo",
-            "required": True,
-        }
+    zip: Decimal = element(
+        tag="zip",
+        ns="foo",
     )
-    country: str = field(
-        const=True,
+    country: str = attr(
+        name="country",
+        ns="foo",
         default="US",
-        metadata={
-            "type": "Attribute",
-        },
     )
 
 
-class Comment(BaseModel):
+class Comment(BaseXmlModel):
     class Meta:
         name = "comment"
         namespace = "foo"
 
-    model_config = ConfigDict(defer_build=True)
-    value: str = field(
+    value: str = attr(
+        name="value",
         default="",
-        metadata={
-            "required": True,
-        },
     )
 
 
-class Items(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    item: List["Items.Item"] = field(
+class Items(BaseXmlModel):
+    item: List["Items.Item"] = element(
+        tag="item",
+        ns="foo",
         default_factory=list,
-        metadata={
-            "type": "Element",
-            "namespace": "foo",
-        },
     )
 
     class Item(BaseModel):
-        model_config = ConfigDict(defer_build=True)
-        product_name: str = field(
-            metadata={
-                "name": "productName",
-                "type": "Element",
-                "namespace": "foo",
-                "required": True,
-            }
+        product_name: str = element(
+            tag="productName",
+            ns="foo",
         )
-        quantity: int = field(
-            metadata={
-                "type": "Element",
-                "namespace": "foo",
-                "required": True,
-                "max_exclusive": 100,
-            }
+        quantity: int = element(
+            tag="quantity",
+            ns="foo",
+            max_exclusive=100,
         )
-        usprice: Decimal = field(
-            metadata={
-                "name": "USPrice",
-                "type": "Element",
-                "namespace": "foo",
-                "required": True,
-            }
+        usprice: Decimal = element(
+            tag="USPrice",
+            ns="foo",
         )
-        comment: Optional[Comment] = field(
+        comment: Optional[Comment] = element(
+            tag="comment",
+            ns="foo",
             default=None,
-            metadata={
-                "type": "Element",
-                "namespace": "foo",
-            },
         )
-        ship_date: Optional[XmlDate] = field(
+        ship_date: Optional[XmlDate] = element(
+            tag="shipDate",
+            ns="foo",
             default=None,
-            metadata={
-                "name": "shipDate",
-                "type": "Element",
-                "namespace": "foo",
-            },
         )
-        part_num: str = field(
-            metadata={
-                "name": "partNum",
-                "type": "Attribute",
-                "required": True,
-                "pattern": r"\d{3}-[A-Z]{2}",
-            }
+        part_num: str = attr(
+            name="partNum",
+            pattern= r"\d{3}-[A-Z]{2}",
         )
 
 
 class PurchaseOrderType(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    ship_to: Usaddress = field(
-        metadata={
-            "name": "shipTo",
-            "type": "Element",
-            "namespace": "foo",
-            "required": True,
-        }
+    ship_to: Usaddress = element(
+        tag="shipTo",
+        ns="foo",
     )
-    bill_to: Usaddress = field(
-        metadata={
-            "name": "billTo",
-            "type": "Element",
-            "namespace": "foo",
-            "required": True,
-        }
+    bill_to: Usaddress = element(
+        tag="billTo",
+        ns="foo",
     )
-    comment: Optional[Comment] = field(
+    comment: Optional[Comment] = element(
+        tag="comment",
+        ns="foo",
         default=None,
-        metadata={
-            "type": "Element",
-            "namespace": "foo",
-        },
     )
-    items: Items = field(
-        metadata={
-            "type": "Element",
-            "namespace": "foo",
-            "required": True,
-        }
+    items: Items = element(
+        tag="items",
+        ns="foo",
     )
-    order_date: Optional[XmlDate] = field(
+    order_date: Optional[XmlDate] = attr(
         default=None,
         metadata={
             "name": "orderDate",
@@ -178,5 +119,3 @@ class PurchaseOrder(PurchaseOrderType):
     class Meta:
         name = "purchaseOrder"
         namespace = "foo"
-
-    model_config = ConfigDict(defer_build=True)
