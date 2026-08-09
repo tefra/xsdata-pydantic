@@ -1,7 +1,8 @@
 [build-system]
 requires = ["setuptools>=61.2"]
 build-backend = "setuptools.build_meta"
-
+[tool.poetry]
+version = "2.4.1"
 [project]
 name = "xsdata_pydantic"
 description = "xsdata pydantic plugin"
@@ -27,8 +28,8 @@ classifiers = [
 keywords = ["xsd", "wsdl", "schema", "dtd", "binding", "xml", "json", "dataclasses", "generator", "cli", "pydantic"]
 requires-python = ">=3.8"
 dependencies = [
-    "pydantic>=2.6",
-    "xsdata>=24.5",
+    "pydantic-xml>=2.21, <3",
+    "xsdata>=26.2",
 ]
 dynamic = ["version"]
 
@@ -49,7 +50,7 @@ Changelog = "https://xsdata-pydantic.readthedocs.io/en/latest/changelog.html"
 xsdata_pydantic = "xsdata_pydantic.hooks.class_type"
 
 [project.optional-dependencies]
-cli = ["xsdata[cli]>=24.5"]
+cli = ["xsdata[cli]>=26.2"]
 docs = [
     "mkdocs",
     "mkdocs-gen-files",
